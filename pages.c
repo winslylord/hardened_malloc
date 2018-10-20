@@ -19,7 +19,7 @@ void *allocate_pages(size_t usable_size, size_t guard_size, bool unprotect) {
         return NULL;
     }
     void *usable = (char *)real + guard_size;
-    if (unprotect && unlikely(memory_protect_rw(usable, usable_size))) {
+    if (unprotect && unlikely(memory_protect_rw(usable, usable_size, -1))) {
         memory_unmap(real, real_size);
         return NULL;
     }
@@ -60,7 +60,7 @@ void *allocate_pages_aligned(size_t usable_size, size_t alignment, size_t guard_
     size_t trail_size = alloc_size - lead_size - usable_size;
     void *base = (char *)usable + lead_size;
 
-    if (unlikely(memory_protect_rw(base, usable_size))) {
+    if (unlikely(memory_protect_rw(base, usable_size, -1))) {
         memory_unmap(real, real_alloc_size);
         return NULL;
     }
